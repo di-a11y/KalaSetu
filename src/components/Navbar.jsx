@@ -1,11 +1,19 @@
-import React from "react";
+import {useState} from "react";
+import { Link, NavLink } from "react-router-dom";
+import search_icon from "../assets/frontend_assets/search_icon.png";
+import profile_icon from "../assets/frontend_assets/profile_icon.png";
+import cart_icon from "../assets/frontend_assets/cart_icon.png";
+import menu_icon from "../assets/frontend_assets/menu_icon.png";
+import dropdown_icon from "../assets/frontend_assets/dropdown_icon.png"
+
 
 const Navbar = () => {
+  const [visible, setVisible] = useState(false);
+
   return (
     <header className="w-full font-medium bg-[#B7A167]">
-      {/* Top section: logo + tagline + search icon */}
+
       <div className="flex items-center justify-between px-8 py-5">
-        {/* Logo & tagline */}
         <div>
           <div className="flex items-baseline gap-2">
             <h1 className="text-4xl font-bold font-serif tracking-tight">कला</h1>
@@ -16,33 +24,65 @@ const Navbar = () => {
           </p>
         </div>
 
-        {/* Search Icon */}
-        <button className="p-2 hover:opacity-80 cursor-pointer transition">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-10 h-10 text-black"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-4.35-4.35M11 6a5 5 0 100 10 5 5 0 000-10z"
-            />
-          </svg>
-        </button>
+
+        <div className="flex items-center gap-6">
+          <img src={search_icon} alt="search" className="w-5 cursor-pointer" />
+
+          <div className="group relative">
+            <img src={profile_icon} alt="profile" className="w-5 cursor-pointer" />
+            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
+              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-amber-100 text-gray-500 rounded">
+                <p className="cursor-pointer hover:text-black">My Profile</p>
+                <p className="cursor-pointer hover:text-black">Orders</p>
+                <p className="cursor-pointer hover:text-black">Logout</p>
+              </div>
+            </div>
+          </div>
+          <Link to='/Cart' className="relative">
+            <img src={cart_icon} alt="cart" className="w-5 min-w-5" />
+            <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">15</p>
+          </Link>
+          <img onClick={() => setVisible(true)} src={menu_icon} alt="menu" className="w-5 cursor-pointer sm:hidden" />
+
+
+        </div>
+
+        {/* Sidebar menu for small screens */}
+        <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? 'w-full' : 'w-0'}`}>
+          <div className="flex flex-col text-gray-600">
+            <div onClick={() => setVisible(false)} className="flex items-center gap-4 p-3 cursor-pointer">
+              <img className="h-4 rotate-180" src={dropdown_icon} alt="dropdown" />
+              <p>Back</p>
+            </div>
+            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="/About">About</NavLink>
+            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="/">Handicrafts</NavLink>
+            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="/">Categories</NavLink>
+            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="Endangered">Endangered</NavLink>
+            <NavLink onClick={()=>setVisible(false)} className="py-2 pl-6 border" to="/Stories">Stories</NavLink>
+          </div>
+
+        </div>
+
       </div>
 
-      {/* Bottom nav links */}
+
       <nav className="bg-[#EACD84] px-8 py-2">
         <ul className="flex space-x-6 text-sm md:text-base text-black">
-          <li className="hover:underline cursor-pointer">About</li>
-          <li className="hover:underline cursor-pointer">Handicrafts</li>
-          <li className="hover:underline cursor-pointer">Categories</li>
-          <li className="hover:underline cursor-pointer">Endangered</li>
-          <li className="hover:underline cursor-pointer">Stories</li>
+          <NavLink to='/About'>
+            <li className="hover:underline cursor-pointer">About</li>
+          </NavLink>
+          <NavLink to='/'>
+            <li className="hover:underline cursor-pointer">Handicrafts</li>
+          </NavLink>
+          <NavLink>
+            <li className="hover:underline cursor-pointer">Categories</li>
+          </NavLink>
+          <NavLink>
+            <li className="hover:underline cursor-pointer">Endangered</li>
+          </NavLink>
+          <NavLink>
+            <li className="hover:underline cursor-pointer">Stories</li>
+          </NavLink>
         </ul>
       </nav>
     </header>
