@@ -11,6 +11,7 @@ import PlaceOrder from './pages/Placeorder'
 import Orders from './pages/Orders'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+//import PopularCategory from './components/PopularCategory'
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path='/place-order' element={<PlaceOrder/>} />
         <Route path='/orders' element={<Orders/>} />
       </Routes>
+      <Footer />
 
       
       

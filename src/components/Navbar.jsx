@@ -15,7 +15,7 @@ const Navbar = () => {
 
       <div className="flex items-center justify-between px-8 py-5">
         <div>
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-2 cursor-pointer" to="/">
             <h1 className="text-4xl font-bold font-serif tracking-tight">कला</h1>
             <span className="text-2xl font-serif tracking-wide">SETU</span>
           </div>
@@ -64,7 +64,6 @@ const Navbar = () => {
         </div>
 
       </div>
-
 
       <nav className="bg-[#EACD84] px-8 py-2">
         <ul className="flex space-x-6 text-sm md:text-base text-black">
