@@ -10,9 +10,12 @@ const Footer = () => {
   return (
     <footer className="bg-[#B7A167] text-[#0a0a0a] relative overflow-hidden pt-[70px] pb-[40px] px-10 font-[Poppins]">
       {/* Footer main container */}
-      <div className="max-w-[1300px] mx-auto grid grid-cols-[1.3fr_1fr_1fr_1fr_1fr] gap-[60px] relative z-[1] lg:grid-cols-3 md:grid-cols-1 lg:gap-[40px] md:gap-[30px]">
+      <div className="max-w-[1300px] mx-auto grid gap-10 
+  grid-cols-1 
+  sm:grid-cols-2 
+  lg:grid-cols-5">
         {/* Left section (Logo + tagline) */}
-        <div className="flex flex-col justify-start pr-[30px] md:items-center md:text-center lg:col-span-3">
+        <div className="flex flex-col justify-start sm:col-span-2 lg:col-span-2 text-center sm:text-left">
           <h1 className="font-[Inknut_Antiqua] text-[50px] font-light text-black mb-[12px] tracking-[1px]">
             <span className="font-[Amita] font-bold">कला</span>
             <span className="font-[Amita] ml-1">Setu</span>
@@ -23,7 +26,7 @@ const Footer = () => {
         </div>
 
         {/* My Account Links */}
-        <div className="flex flex-col text-left md:text-center">
+        <div className="flex flex-col text-center sm:text-left">
           <h4 className="text-[18px] mb-[18px] font-bold tracking-[0.5px] text-black">
             MY ACCOUNT LINKS
           </h4>
@@ -37,7 +40,7 @@ const Footer = () => {
         </div>
 
         {/* Useful Links */}
-        <div className="flex flex-col text-left md:text-center">
+        <div className="flex flex-col text-center sm:text-left">
           <h4 className="text-[18px] mb-[18px] font-bold tracking-[0.5px] text-black">
             USEFUL LINKS
           </h4>
@@ -52,7 +55,7 @@ const Footer = () => {
         </div>
 
         {/* Learn More */}
-        <div className="flex flex-col text-left md:text-center">
+        <div className="flex flex-col text-center sm:text-left">
           <h4 className="text-[18px] mb-[18px] font-bold tracking-[0.5px] text-black">
             LEARN MORE
           </h4>
@@ -66,13 +69,13 @@ const Footer = () => {
         </div>
 
         {/* Connect With Us */}
-        <div className="flex flex-col text-left md:text-center">
+        <div className="flex flex-col text-center sm:text-left">
           <h4 className="text-[18px] mb-[18px] font-bold tracking-[0.5px] text-black">
             CONNECT WITH US
           </h4>
 
           {/* Social Icons */}
-          <div className="flex flex-wrap gap-[15px] mt-[10px] justify-start md:justify-center">
+          <div className="flex flex-wrap gap-[15px] mt-[10px] justify-start md:justify-left">
             <SocialIcon
               Icon={FaFacebookF}
               color="hover:bg-[#3b5998]"
