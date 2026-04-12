@@ -7,6 +7,7 @@ import menu_icon from "../assets/frontend_assets/menu_icon.png";
 import dropdown_icon from "../assets/frontend_assets/dropdown_icon.png"
 
 
+
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
 
@@ -58,7 +59,7 @@ const Navbar = () => {
             </div>
             <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/About">About</NavLink>
             <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/Handicrafts">Handicrafts</NavLink>
-            <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/Categories">Categories</NavLink>
+            <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/Categories">Clothing</NavLink>
             <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/Endangered">Endangered</NavLink>
             <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/Stories">Stories</NavLink>
           </div>
@@ -94,7 +95,7 @@ const Navbar = () => {
 
           {/* Categories */}
           <li className="relative group cursor-pointer">
-            <span className="hover:underline">Categories</span>
+            <span className="hover:underline">Clothing</span>
 
             {/* Mega Menu */}
             <div className="absolute left-0 top-full pt-4 hidden group-hover:block z-50">
@@ -107,11 +108,10 @@ const Navbar = () => {
                   <div>
                     <h3 className="font-semibold mb-3">Women</h3>
                     <ul className="space-y-2 text-gray-600">
-                      <li><NavLink to="/handicrafts/allClothing" className="hover:text-black">All Clothing</NavLink></li>
-                      <li><NavLink to="/handicrafts/new-arrivals" className="hover:text-black">New Arrivals</NavLink></li>
-                      <li><NavLink to="/handicrafts/kurtas-sets" className="hover:text-black">Kurtas & Sets</NavLink></li>
-                      <li><NavLink to="/handicrafts/dresses" className="hover:text-black">Dresses</NavLink></li>
-                      <li><NavLink to="/handicrafts/tops-blouses" className="hover:text-black">Tops & Blouses</NavLink></li>
+                      <li><NavLink to="/NewArrivals" className="hover:text-black">New Arrivals</NavLink></li>
+                      <li><NavLink to="/KurtasSets" className="hover:text-black">Kurtas & Sets</NavLink></li>
+                      <li><NavLink to="/Dresses" className="hover:text-black">Dresses</NavLink></li>
+                      <li><NavLink to="/topsBlouses" className="hover:text-black">Tops & Blouses</NavLink></li>
                     </ul>
                   </div>
 
@@ -166,6 +166,16 @@ const Navbar = () => {
           </li>
 
           {/* Stories */}
+          <li className="relative group cursor-pointer">
+            <span className="hover:underline">Accessories</span>
+            <div className="absolute hidden group-hover:block top-full left-0 pt-3 z-50">
+              <div className="flex flex-col gap-2 w-44 py-3 px-4 bg-amber-100 text-gray-700 rounded shadow-lg">
+                <NavLink to="/stories/latest" className="hover:text-black">Neckpiece</NavLink>
+                <NavLink to="/stories/artisans" className="hover:text-black">Earrings</NavLink>
+              </div>
+            </div>
+          </li>
+
           <li className="relative group cursor-pointer">
             <span className="hover:underline">Stories</span>
             <div className="absolute hidden group-hover:block top-full left-0 pt-3 z-50">
