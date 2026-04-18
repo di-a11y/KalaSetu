@@ -48,7 +48,7 @@ const INITIAL_FILTERS = {
 };
 
 const Clothing = ({ category, subCategory }) => {
-  const { products = [] } = useContext(ShopContext);
+  const { products = [], search } = useContext(ShopContext);
 
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [sortOrder, setSortOrder] = useState('default');
@@ -84,10 +84,15 @@ const Clothing = ({ category, subCategory }) => {
       const matchFit         = filters.fits.length      > 0 ? filters.fits.includes(item.fit)                     : true;
       const matchPrice       = item.price <= filters.maxPrice;
 
+      const matchSearch = search.trim() === ''
+      ? true
+      : item.name.toLowerCase().includes(search.toLowerCase()) ||
+        item.description.toLowerCase().includes(search.toLowerCase());
+
       return matchCategory && matchSubCategory && matchType && matchSize
-          && matchGender && matchPrice && matchCraft && matchMaterial && matchFit;
+          && matchGender && matchPrice && matchCraft && matchMaterial && matchFit && matchSearch;
     });
-  }, [products, filters, category, subCategory]);
+  }, [products, filters, category, subCategory, search]);
 
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => {
