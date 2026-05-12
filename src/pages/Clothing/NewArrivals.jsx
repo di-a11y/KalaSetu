@@ -1,4 +1,4 @@
-import Clothing from "../Clothing";
+import Clothing from "../Clothing.jsx";
 
 const NewArrivals = () => {
 
