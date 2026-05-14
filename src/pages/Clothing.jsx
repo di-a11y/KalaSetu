@@ -1,6 +1,7 @@
-import React, { useContext, useState, useMemo } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import dropdown_icon from '../assets/frontend_assets/dropdown_icon.png'
+import React, { useContext, useState, useMemo } from 'react';
+import { ShopContext } from '../context/ShopContext';
+import { Link } from 'react-router-dom';
+import dropdown_icon from '../assets/frontend_assets/dropdown_icon.png';
 
 // ── Defined OUTSIDE component ──
 const FilterSection = ({ label, open, onToggle, children }) => (
@@ -85,9 +86,9 @@ const Clothing = ({ category, subCategory }) => {
       const matchPrice       = item.price <= filters.maxPrice;
 
       const matchSearch = search.trim() === ''
-      ? true
-      : item.name.toLowerCase().includes(search.toLowerCase()) ||
-        item.description.toLowerCase().includes(search.toLowerCase());
+        ? true
+        : item.name.toLowerCase().includes(search.toLowerCase()) ||
+          item.description.toLowerCase().includes(search.toLowerCase());
 
       return matchCategory && matchSubCategory && matchType && matchSize
           && matchGender && matchPrice && matchCraft && matchMaterial && matchFit && matchSearch;
@@ -120,7 +121,6 @@ const Clothing = ({ category, subCategory }) => {
           )}
         </div>
 
-        {/* PRICE */}
         <FilterSection label="PRICE" open={openSections.price} onToggle={() => toggleSection('price')}>
           <div className="mt-4">
             <input
@@ -136,7 +136,6 @@ const Clothing = ({ category, subCategory }) => {
           </div>
         </FilterSection>
 
-        {/* PRODUCT TYPE */}
         <FilterSection label="PRODUCT TYPE" open={openSections.type} onToggle={() => toggleSection('type')}>
           <CheckboxList
             items={["Kurtas and sets", "Dresses", "Tops and Blouses"]}
@@ -145,7 +144,6 @@ const Clothing = ({ category, subCategory }) => {
           />
         </FilterSection>
 
-        {/* SIZE */}
         <FilterSection label="SIZE" open={openSections.size} onToggle={() => toggleSection('size')}>
           <CheckboxList
             items={["XXS", "XS", "S", "M", "L", "XL"]}
@@ -154,7 +152,6 @@ const Clothing = ({ category, subCategory }) => {
           />
         </FilterSection>
 
-        {/* GENDER */}
         <FilterSection label="GENDER" open={openSections.gender} onToggle={() => toggleSection('gender')}>
           <CheckboxList
             items={["Women", "Men"]}
@@ -163,7 +160,6 @@ const Clothing = ({ category, subCategory }) => {
           />
         </FilterSection>
 
-        {/* CRAFT */}
         <FilterSection label="CRAFT" open={openSections.craft} onToggle={() => toggleSection('craft')}>
           <CheckboxList
             items={["Embroidery", "Mirror Work", "Block Printing", "Ikat", "Chikankari", "Weaving", "Ombre"]}
@@ -172,7 +168,6 @@ const Clothing = ({ category, subCategory }) => {
           />
         </FilterSection>
 
-        {/* MATERIAL */}
         <FilterSection label="MATERIAL" open={openSections.material} onToggle={() => toggleSection('material')}>
           <CheckboxList
             items={["Cotton", "Silk", "Wool", "Linen", "Polyester", "Rayon", "Chanderi"]}
@@ -181,7 +176,6 @@ const Clothing = ({ category, subCategory }) => {
           />
         </FilterSection>
 
-        {/* FIT */}
         <FilterSection label="FIT" open={openSections.fit} onToggle={() => toggleSection('fit')}>
           <CheckboxList
             items={["Relaxed", "Straight", "Fit and Flare", "A-line", "Fitted", "Anti Fit"]}
@@ -213,7 +207,9 @@ const Clothing = ({ category, subCategory }) => {
           : (
             <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
               {sortedProducts.map((item) => (
-                <div key={item._id} className="group cursor-pointer">
+                
+                <Link to={`/product/${item._id}`} key={item._id} className="group cursor-pointer">
+
                   <div className="overflow-hidden">
                     <img
                       src={item.image[0]}
@@ -221,9 +217,12 @@ const Clothing = ({ category, subCategory }) => {
                       className="w-full h-auto group-hover:scale-105 transition duration-300"
                     />
                   </div>
+
                   <p className="text-sm mt-2 text-gray-700">{item.name}</p>
                   <p className="text-sm font-medium">₹ {item.price}</p>
-                </div>
+
+                </Link>
+
               ))}
             </div>
           )
