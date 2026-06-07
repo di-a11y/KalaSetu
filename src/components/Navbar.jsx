@@ -13,6 +13,7 @@ const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { search, setSearch } = useContext(ShopContext);
+  const { getCartCount } = useContext(ShopContext);
 
   return (
     <header className="w-full font-medium bg-[#B7A167] relative z-50">
@@ -69,13 +70,13 @@ const Navbar = () => {
                 <p className="cursor-pointer hover:text-black">Orders</p>
                 <p className="cursor-pointer hover:text-black">Logout</p>
               </div>
-            </div>
+            </div>  
           </div>
 
           {/* CART */}
           <Link to='/Cart' className="relative">
             <img src={cart_icon} alt="cart" className="w-5 min-w-5" />
-            <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">15</p>
+            <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">{getCartCount()}</p>
           </Link>
 
           {/* MOBILE MENU */}
