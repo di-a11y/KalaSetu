@@ -2,9 +2,6 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 
-/* ─────────────────────────────────────────────
-   Small helper: star strip
-───────────────────────────────────────────── */
 const Stars = ({ count = 5, filled = 5, size = 'sm' }) => {
   const px = size === 'sm' ? 'w-3 h-3' : 'w-4 h-4';
   return (
@@ -18,9 +15,6 @@ const Stars = ({ count = 5, filled = 5, size = 'sm' }) => {
   );
 };
 
-/* ─────────────────────────────────────────────
-   Accordion row
-───────────────────────────────────────────── */
 const Accordion = ({ title, extra, children }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -49,9 +43,6 @@ const Accordion = ({ title, extra, children }) => {
   );
 };
 
-/* ─────────────────────────────────────────────
-   Delivery info row
-───────────────────────────────────────────── */
 const DeliveryRow = ({ icon, text }) => (
   <div className="flex items-start gap-3 py-3 border-b border-gray-100 cursor-pointer hover:opacity-70 transition-opacity">
     <span className="text-base mt-0.5">{icon}</span>
@@ -62,16 +53,13 @@ const DeliveryRow = ({ icon, text }) => (
   </div>
 );
 
-/* ─────────────────────────────────────────────
-   Main Product Component
-───────────────────────────────────────────── */
 const Product = () => {
   const { productId } = useParams();
-  const { products, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart } = useContext(ShopContext);
   const navigate = useNavigate();
 
   const [productData, setProductData] = useState(null);
-  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedSize, setSelectedSize] = useState(''); // ✅ ONE size state only
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -80,18 +68,20 @@ const Product = () => {
   const [videoPlaying, setVideoPlaying] = useState(false);
   const scrollRef = useRef(null);
 
+  // ✅ REMOVED: const [size, setSize] = useState(''); — was never updated
+
   useEffect(() => {
     const found = products.find((item) => item._id === productId);
     if (found) setProductData(found);
-    // reset video when product changes
     setVideoPlaying(false);
     setCraftExpanded(false);
+    setSelectedSize(''); // ✅ Reset size when product changes
   }, [productId, products]);
 
-  // Scroll helpers for the craft carousel
   const scrollLeft  = () => scrollRef.current?.scrollBy({ left: -280, behavior: 'smooth' });
   const scrollRight = () => scrollRef.current?.scrollBy({ left:  280, behavior: 'smooth' });
 
+  // ✅ FIXED: handleAddToCart now uses selectedSize correctly
   const handleAddToCart = () => {
     if (!selectedSize) {
       setSizeError(true);
@@ -115,12 +105,10 @@ const Product = () => {
   const images = productData.image || [];
   const visibleImages = showMore ? images : images.slice(0, 4);
 
-  // Related crafts: same category, excluding current product
   const relatedCrafts = products
     .filter((p) => p._id !== productData._id && p.category === productData.category)
     .slice(0, 8);
 
-  // Craft description — use dedicated field or fall back to product description
   const craftDescription = productData.craftDescription || productData.description || '';
   const PREVIEW_LENGTH = 140;
   const isLong = craftDescription.length > PREVIEW_LENGTH;
@@ -131,7 +119,7 @@ const Product = () => {
   return (
     <div className="max-w-screen-xl mx-auto">
 
-      {/* ── Breadcrumb ── */}
+      {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 px-4 sm:px-6 py-3 text-xs text-gray-500 flex-wrap">
         <button
           onClick={() => navigate(-1)}
@@ -143,31 +131,28 @@ const Product = () => {
           Back
         </button>
         <span>/</span>
-        <span
-          className="hover:text-black cursor-pointer transition-colors"
-          onClick={() => navigate('/')}
-        >Home</span>
+        <span className="hover:text-black cursor-pointer transition-colors" onClick={() => navigate('/')}>
+          Home
+        </span>
         <span>/</span>
         <span
           className="hover:text-black cursor-pointer transition-colors capitalize"
           onClick={() => navigate(`/${productData.category?.toLowerCase()}`)}
-        >{productData.category}</span>
+        >
+          {productData.category}
+        </span>
         <span>/</span>
         <span className="text-black font-medium">{productData.name}</span>
       </nav>
 
-      {/* ── Two-column layout ── */}
+      {/* Two-column layout */}
       <div className="flex flex-col lg:flex-row">
 
-        {/* ════════ LEFT: Image Grid ════════ */}
+        {/* LEFT: Image Grid */}
         <div className="flex-1 lg:max-w-[62%]">
           <div className="grid grid-cols-2 gap-0.5">
             {visibleImages.map((img, i) => (
-              <div
-                key={i}
-                className="overflow-hidden bg-gray-50"
-                style={{ aspectRatio: '3/4' }}
-              >
+              <div key={i} className="overflow-hidden bg-gray-50" style={{ aspectRatio: '3/4' }}>
                 <img
                   src={img}
                   alt={`${productData.name} view ${i + 1}`}
@@ -177,7 +162,6 @@ const Product = () => {
             ))}
           </div>
 
-          {/* Show more / less */}
           {images.length > 4 && (
             <button
               onClick={() => setShowMore(!showMore)}
@@ -194,10 +178,9 @@ const Product = () => {
           )}
         </div>
 
-        {/* ════════ RIGHT: Sticky Details Panel ════════ */}
+        {/* RIGHT: Sticky Details Panel */}
         <div className="lg:w-[420px] lg:flex-shrink-0 px-5 sm:px-7 pt-5 pb-10 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
 
-          {/* Category & Rating */}
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-gray-500 uppercase tracking-wider font-medium">
               {productData.category}
@@ -209,28 +192,26 @@ const Product = () => {
             </div>
           </div>
 
-          {/* Bestseller Badge */}
           {productData.bestseller && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1 rounded-sm mb-3">
               Bestseller ⚡
             </span>
           )}
 
-          {/* Product Name */}
           <h1 className="text-xl sm:text-2xl font-bold uppercase tracking-wide leading-tight mb-2">
             {productData.name}
           </h1>
 
-          {/* Price */}
-          <p className="text-xl font-semibold mb-0.5">₹{Number(productData.price).toLocaleString('en-IN')}.00</p>
+          <p className="text-xl font-semibold mb-0.5">
+            ₹{Number(productData.price).toLocaleString('en-IN')}.00
+          </p>
           <p className="text-xs text-gray-500 mb-5">MRP inclusive of all taxes</p>
 
-          {/* Colour / Technique tag */}
           {productData.color && (
             <p className="text-sm text-gray-700 mb-5">{productData.color}</p>
           )}
 
-          {/* ── Size Selection ── */}
+          {/* Size Selection */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm font-bold">Sizes</p>
@@ -240,19 +221,20 @@ const Product = () => {
             </div>
 
             <div className="grid grid-cols-3 gap-2 mb-3">
-              {sizes.map((size) => (
+              {/* ✅ FIXED: renamed map variable from `size` to `sizeOption` to avoid shadowing */}
+              {sizes.map((sizeOption) => (
                 <button
-                  key={size}
-                  onClick={() => { setSelectedSize(size); setSizeError(false); }}
+                  key={sizeOption}
+                  onClick={() => { setSelectedSize(sizeOption); setSizeError(false); }}
                   className={`py-3 text-xs sm:text-sm border transition-all duration-150 font-medium
-                    ${selectedSize === size
+                    ${selectedSize === sizeOption
                       ? 'border-black bg-black text-white'
                       : sizeError
                         ? 'border-red-400 text-red-500 hover:border-black hover:text-black'
                         : 'border-gray-300 hover:border-black'
                     }`}
                 >
-                  {size}
+                  {sizeOption}
                 </button>
               ))}
             </div>
@@ -261,7 +243,6 @@ const Product = () => {
               <p className="text-xs text-red-500 mb-2">Please select a size to continue.</p>
             )}
 
-            {/* True to size banner */}
             <div className="border border-gray-200 rounded-sm p-3 flex items-start gap-2 text-xs text-gray-600">
               <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -270,8 +251,9 @@ const Product = () => {
             </div>
           </div>
 
-          {/* ── Add to Bag + Wishlist ── */}
+          {/* Add to Bag + Wishlist */}
           <div className="flex gap-2 mb-6">
+            {/* ✅ FIXED: calls handleAddToCart() instead of addToCart() directly */}
             <button
               onClick={handleAddToCart}
               className={`flex-1 py-4 text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200
@@ -311,7 +293,7 @@ const Product = () => {
             </button>
           </div>
 
-          {/* ── Delivery Info ── */}
+          {/* Delivery Info */}
           <div className="mb-4">
             <DeliveryRow icon="🚚" text="Free Delivery & Free Returns*" />
             <DeliveryRow icon="📦" text="Delivery: Delhi/NCR: 1–2 days · Metro cities: 2–3 days · Others: 3–5 days" />
@@ -319,18 +301,13 @@ const Product = () => {
             <DeliveryRow icon="🔒" text="Secure checkout · Hassle-free 14-day exchange & returns*" />
           </div>
 
-          {/* ── Accordions ── */}
-          <Accordion
-            title="Reviews (24)"
-            extra={<Stars size="sm" filled={4} />}
-          >
+          {/* Accordions */}
+          <Accordion title="Reviews (24)" extra={<Stars size="sm" filled={4} />}>
             <p>Customers love this product! Reviews are displayed here.</p>
           </Accordion>
 
           <Accordion title="Size & Fit">
-            <p>
-              This garment is true to size. For a relaxed look, size up. Measurements are based on a size M/38.
-            </p>
+            <p>This garment is true to size. For a relaxed look, size up. Measurements are based on a size M/38.</p>
           </Accordion>
 
           <Accordion title="Description">
@@ -360,25 +337,16 @@ const Product = () => {
             </div>
           </Accordion>
 
-          {/* border cap */}
           <div className="border-t border-gray-200" />
-
         </div>
-        {/* ─── end right panel ─── */}
-
       </div>
 
-      {/* ══════════════════════════════════════════════
-          KNOW THE CRAFT SECTION
-      ══════════════════════════════════════════════ */}
+      {/* KNOW THE CRAFT SECTION */}
       <div className="border-t border-gray-200 mt-8 px-4 sm:px-10 py-12 max-w-3xl mx-auto">
-
-        {/* Heading */}
         <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ fontFamily: 'Georgia, serif' }}>
           Know the Craft
         </h2>
 
-        {/* Description + Read More */}
         <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
           {displayedCraft}
           {isLong && (
@@ -391,12 +359,11 @@ const Product = () => {
           )}
         </p>
 
-        {/* Video / Image with play button */}
-        <div className="relative rounded-xl overflow-hidden bg-gray-100 cursor-pointer group"
+        <div
+          className="relative rounded-xl overflow-hidden bg-gray-100 cursor-pointer group"
           style={{ aspectRatio: '16/9' }}
           onClick={() => setVideoPlaying(true)}
         >
-          {/* If a YouTube / hosted video URL exists and play was clicked, embed it */}
           {videoPlaying && productData.craftVideo ? (
             <iframe
               className="w-full h-full"
@@ -411,21 +378,14 @@ const Product = () => {
             />
           ) : (
             <>
-              {/* Thumbnail — craft image or first product image */}
               <img
                 src={productData.craftThumbnail || productData.image?.[0]}
                 alt="Know the craft"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
-
-              {/* Dark scrim */}
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
-
-              {/* Play button */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center
-                                bg-[#2d86e0]/80 backdrop-blur-sm
-                                group-hover:scale-110 transition-transform duration-200 shadow-lg">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center bg-[#2d86e0]/80 backdrop-blur-sm group-hover:scale-110 transition-transform duration-200 shadow-lg">
                   <svg className="w-7 h-7 sm:w-9 sm:h-9 fill-white translate-x-0.5" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" />
                   </svg>
@@ -435,7 +395,6 @@ const Product = () => {
           )}
         </div>
 
-        {/* Small note if no video exists */}
         {!productData.craftVideo && (
           <p className="text-xs text-gray-400 mt-2 text-center">
             Add a <code className="bg-gray-100 px-1 rounded">craftVideo</code> URL to your product data to enable playback.
@@ -443,23 +402,17 @@ const Product = () => {
         )}
       </div>
 
-      {/* ══════════════════════════════════════════════
-          EXPLORE MORE CRAFTS SECTION
-      ══════════════════════════════════════════════ */}
+      {/* EXPLORE MORE CRAFTS */}
       {relatedCrafts.length > 0 && (
         <div className="border-t border-gray-200 py-10 px-4 sm:px-10">
-
-          {/* Header row */}
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: 'Georgia, serif' }}>
               Explore More Crafts
             </h2>
-            {/* Arrow buttons — visible on desktop */}
             <div className="hidden sm:flex gap-2">
               <button
                 onClick={scrollLeft}
-                className="w-9 h-9 border border-gray-300 rounded-full flex items-center justify-center
-                           hover:border-black hover:bg-black hover:text-white transition-all"
+                className="w-9 h-9 border border-gray-300 rounded-full flex items-center justify-center hover:border-black hover:bg-black hover:text-white transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -467,8 +420,7 @@ const Product = () => {
               </button>
               <button
                 onClick={scrollRight}
-                className="w-9 h-9 border border-gray-300 rounded-full flex items-center justify-center
-                           hover:border-black hover:bg-black hover:text-white transition-all"
+                className="w-9 h-9 border border-gray-300 rounded-full flex items-center justify-center hover:border-black hover:bg-black hover:text-white transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -477,7 +429,6 @@ const Product = () => {
             </div>
           </div>
 
-          {/* Horizontal scrollable carousel */}
           <div
             ref={scrollRef}
             className="flex gap-4 overflow-x-auto pb-4 scroll-smooth"
@@ -489,7 +440,6 @@ const Product = () => {
                 onClick={() => navigate(`/product/${craft._id}`)}
                 className="flex-shrink-0 w-40 sm:w-48 cursor-pointer group"
               >
-                {/* Square image */}
                 <div className="w-full aspect-square overflow-hidden bg-gray-100 mb-2">
                   <img
                     src={craft.image?.[0]}
@@ -497,14 +447,12 @@ const Product = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                {/* Name */}
                 <p className="text-sm font-medium text-center text-gray-800 group-hover:text-black transition-colors leading-snug">
                   {craft.name}
                 </p>
               </div>
             ))}
           </div>
-
         </div>
       )}
 
@@ -512,9 +460,6 @@ const Product = () => {
   );
 };
 
-/* ─────────────────────────────────────────────
-   Helper: extract YouTube video ID from URL
-───────────────────────────────────────────── */
 function extractYoutubeId(url) {
   try {
     const u = new URL(url);

@@ -15,10 +15,13 @@ import NewArrivals from "./pages/Clothing/NewArrivals";
 import KurtasSets from './pages/Clothing/KurtasSets'
 import Dresses from './pages/Clothing/Dresses'
 import TopsBlouses from './pages/Clothing/TopsBlouses'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const App = () => {
   return (
     <div >
-      
+      <ToastContainer />
       <Navbar />
       <Routes>
         <Route path='/' element={<Home/>} />
@@ -26,7 +29,7 @@ const App = () => {
         <Route path='/about' element={<About/>} />
         <Route path='/contact' element={<Contact/>} />
         <Route path='/product/:productId' element={<Product/>} />
-        <Route path='/cart' element={<Cart/>} />
+        <Route path='/Cart' element={<Cart/>} />
         <Route path='/login' element={<Login/>} />
         <Route path='/place-order' element={<PlaceOrder/>} />
         <Route path='/orders' element={<Orders/>} />
