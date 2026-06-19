@@ -15,6 +15,7 @@ import NewArrivals from "./pages/Clothing/NewArrivals";
 import KurtasSets from './pages/Clothing/KurtasSets'
 import Dresses from './pages/Clothing/Dresses'
 import TopsBlouses from './pages/Clothing/TopsBlouses'
+import SearchBar from './components/SearchBar'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -23,6 +24,7 @@ const App = () => {
     <div >
       <ToastContainer />
       <Navbar />
+      <SearchBar />
       <Routes>
         <Route path='/' element={<Home/>} />
         <Route path='/clothing' element={<Clothing/>} />

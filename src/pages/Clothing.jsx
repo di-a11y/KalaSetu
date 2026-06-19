@@ -1,7 +1,8 @@
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useContext, useState, useMemo, useEffect } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 import dropdown_icon from '../assets/frontend_assets/dropdown_icon.png';
+import {useSearchParams} from "react-router-dom";
 
 // ── Defined OUTSIDE component ──
 const FilterSection = ({ label, open, onToggle, children }) => (
@@ -50,6 +51,14 @@ const INITIAL_FILTERS = {
 
 const Clothing = ({ category, subCategory }) => {
   const { products = [], search } = useContext(ShopContext);
+
+  const [searchParams] = useSearchParams();
+  const {setSearch} = useContext(ShopContext);
+
+  useEffect(() => {
+  const q = searchParams.get('search');
+  if (q) setSearch(q);
+}, []);
 
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [sortOrder, setSortOrder] = useState('default');
@@ -102,6 +111,8 @@ const Clothing = ({ category, subCategory }) => {
       return 0;
     });
   }, [filteredProducts, sortOrder]);
+
+  
 
   return (
     <div className='flex flex-col sm:flex-row gap-10 pt-10 border-t'>
