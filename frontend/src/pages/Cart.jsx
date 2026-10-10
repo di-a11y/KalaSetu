@@ -26,7 +26,7 @@ const CartItem = ({ item, product, currency, onRemove, onQuantityChange, onWishl
       {/* ── Product Image ── */}
       <div className="w-28 sm:w-36 flex-shrink-0 bg-gray-100">
         <img
-          src={product.image?.[0]}
+          src={product.images?.[0]}
           alt={product.name}
           className="w-full h-full object-cover"
           style={{ aspectRatio: '3/4' }}

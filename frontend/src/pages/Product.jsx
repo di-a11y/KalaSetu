@@ -102,7 +102,7 @@ const Product = () => {
   }
 
   const sizes = productData.sizes?.length ? productData.sizes : ['XS', 'S', 'M', 'L', 'XL', '2XL'];
-  const images = productData.image || [];
+  const images = productData.images || [];
   const visibleImages = showMore ? images : images.slice(0, 4);
 
   const relatedCrafts = products
@@ -379,7 +379,7 @@ const Product = () => {
           ) : (
             <>
               <img
-                src={productData.craftThumbnail || productData.image?.[0]}
+                src={productData.craftThumbnail || productData.images?.[0]}
                 alt="Know the craft"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
@@ -442,7 +442,7 @@ const Product = () => {
               >
                 <div className="w-full aspect-square overflow-hidden bg-gray-100 mb-2">
                   <img
-                    src={craft.image?.[0]}
+                    src={craft.images?.[0]}
                     alt={craft.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
