@@ -48,3 +48,4 @@ npm start
 
 - **Diya** — Full Stack Developer
 - **Ritika P. Reji** — Frontend Developer
+- **Vaishnavi Jha** — UI/UX Developer
