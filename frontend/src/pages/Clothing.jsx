@@ -2,7 +2,7 @@ import React, { useContext, useState, useMemo, useEffect } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 import dropdown_icon from '../assets/frontend_assets/dropdown_icon.png';
-import {useSearchParams} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 // ── Defined OUTSIDE component ──
 const FilterSection = ({ label, open, onToggle, children }) => (
@@ -53,15 +53,18 @@ const Clothing = ({ category, subCategory }) => {
   const { products = [], search } = useContext(ShopContext);
 
   const [searchParams] = useSearchParams();
-  const {setSearch} = useContext(ShopContext);
+  const { setSearch } = useContext(ShopContext);
 
   useEffect(() => {
-  const q = searchParams.get('search');
-  if (q) setSearch(q);
-}, []);
+    const q = searchParams.get('search');
+    if (q) setSearch(q);
+  }, []);
 
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [sortOrder, setSortOrder] = useState('default');
+
+  // NEW: controls whether the filter sidebar is shown or hidden
+  const [showFilters, setShowFilters] = useState(true);
 
   const [openSections, setOpenSections] = useState({
     price: false, type: false, size: false, gender: false,
@@ -112,124 +115,148 @@ const Clothing = ({ category, subCategory }) => {
     });
   }, [filteredProducts, sortOrder]);
 
-  
+  const filtersActive = JSON.stringify(filters) !== JSON.stringify(INITIAL_FILTERS);
 
   return (
     <div className='flex flex-col sm:flex-row gap-10 pt-10 border-t'>
 
-      {/* ================= LEFT SIDEBAR ================= */}
-      <div className='w-full sm:w-[260px] sm:sticky sm:top-20 h-fit px-4'>
+      {/* ================= LEFT SIDEBAR (collapsible) ================= */}
+      {/* Untouched internally — only wrapped in a transition/collapse container */}
+      <div
+        className={`transition-all duration-300 overflow-hidden ${
+          showFilters ? 'w-full sm:w-[260px] opacity-100' : 'w-0 sm:w-0 opacity-0 sm:opacity-0'
+        }`}
+      >
+        <div className={`${showFilters ? 'block' : 'hidden'} sm:sticky sm:top-20 h-fit px-4 w-full sm:w-[260px]`}>
 
-        <div className='flex items-center justify-between mb-4'>
-          <p className='text-lg font-semibold'>FILTERS</p>
-          {JSON.stringify(filters) !== JSON.stringify(INITIAL_FILTERS) && (
-            <button
-              onClick={resetFilters}
-              className="text-xs text-gray-400 underline hover:text-black"
-            >
-              Clear all
-            </button>
-          )}
-        </div>
-
-        <FilterSection label="PRICE" open={openSections.price} onToggle={() => toggleSection('price')}>
-          <div className="mt-4">
-            <input
-              type="range" min="500" max="30000"
-              value={filters.maxPrice}
-              onChange={(e) => setFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) }))}
-              className="w-full accent-black"
-            />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
-              <span>₹ 500</span>
-              <span>₹ {filters.maxPrice.toLocaleString()}</span>
-            </div>
+          <div className='flex items-center justify-between mb-4'>
+            <p className='text-lg font-semibold'>FILTERS</p>
+            {filtersActive && (
+              <button
+                onClick={resetFilters}
+                className="text-xs text-gray-400 underline hover:text-black"
+              >
+                Clear all
+              </button>
+            )}
           </div>
-        </FilterSection>
 
-        <FilterSection label="PRODUCT TYPE" open={openSections.type} onToggle={() => toggleSection('type')}>
-          <CheckboxList
-            items={["Kurtas and sets", "Dresses", "Tops and Blouses"]}
-            selected={filters.types}
-            onToggle={(val) => toggleFilter('types', val)}
-          />
-        </FilterSection>
+          <FilterSection label="PRICE" open={openSections.price} onToggle={() => toggleSection('price')}>
+            <div className="mt-4">
+              <input
+                type="range" min="500" max="30000"
+                value={filters.maxPrice}
+                onChange={(e) => setFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) }))}
+                className="w-full accent-black"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-2">
+                <span>₹ 500</span>
+                <span>₹ {filters.maxPrice.toLocaleString()}</span>
+              </div>
+            </div>
+          </FilterSection>
 
-        <FilterSection label="SIZE" open={openSections.size} onToggle={() => toggleSection('size')}>
-          <CheckboxList
-            items={["XXS", "XS", "S", "M", "L", "XL"]}
-            selected={filters.sizes}
-            onToggle={(val) => toggleFilter('sizes', val)}
-          />
-        </FilterSection>
+          <FilterSection label="PRODUCT TYPE" open={openSections.type} onToggle={() => toggleSection('type')}>
+            <CheckboxList
+              items={["Kurtas and sets", "Dresses", "Tops and Blouses"]}
+              selected={filters.types}
+              onToggle={(val) => toggleFilter('types', val)}
+            />
+          </FilterSection>
 
-        <FilterSection label="GENDER" open={openSections.gender} onToggle={() => toggleSection('gender')}>
-          <CheckboxList
-            items={["Women", "Men"]}
-            selected={filters.genders}
-            onToggle={(val) => toggleFilter('genders', val)}
-          />
-        </FilterSection>
+          <FilterSection label="SIZE" open={openSections.size} onToggle={() => toggleSection('size')}>
+            <CheckboxList
+              items={["XXS", "XS", "S", "M", "L", "XL"]}
+              selected={filters.sizes}
+              onToggle={(val) => toggleFilter('sizes', val)}
+            />
+          </FilterSection>
 
-        <FilterSection label="CRAFT" open={openSections.craft} onToggle={() => toggleSection('craft')}>
-          <CheckboxList
-            items={["Embroidery", "Mirror Work", "Block Printing", "Ikat", "Chikankari", "Weaving", "Ombre"]}
-            selected={filters.crafts}
-            onToggle={(val) => toggleFilter('crafts', val)}
-          />
-        </FilterSection>
+          <FilterSection label="GENDER" open={openSections.gender} onToggle={() => toggleSection('gender')}>
+            <CheckboxList
+              items={["Women", "Men"]}
+              selected={filters.genders}
+              onToggle={(val) => toggleFilter('genders', val)}
+            />
+          </FilterSection>
 
-        <FilterSection label="MATERIAL" open={openSections.material} onToggle={() => toggleSection('material')}>
-          <CheckboxList
-            items={["Cotton", "Silk", "Wool", "Linen", "Polyester", "Rayon", "Chanderi"]}
-            selected={filters.materials}
-            onToggle={(val) => toggleFilter('materials', val)}
-          />
-        </FilterSection>
+          <FilterSection label="CRAFT" open={openSections.craft} onToggle={() => toggleSection('craft')}>
+            <CheckboxList
+              items={["Embroidery", "Mirror Work", "Block Printing", "Ikat", "Chikankari", "Weaving", "Ombre"]}
+              selected={filters.crafts}
+              onToggle={(val) => toggleFilter('crafts', val)}
+            />
+          </FilterSection>
 
-        <FilterSection label="FIT" open={openSections.fit} onToggle={() => toggleSection('fit')}>
-          <CheckboxList
-            items={["Relaxed", "Straight", "Fit and Flare", "A-line", "Fitted", "Anti Fit"]}
-            selected={filters.fits}
-            onToggle={(val) => toggleFilter('fits', val)}
-          />
-        </FilterSection>
+          <FilterSection label="MATERIAL" open={openSections.material} onToggle={() => toggleSection('material')}>
+            <CheckboxList
+              items={["Cotton", "Silk", "Wool", "Linen", "Polyester", "Rayon", "Chanderi"]}
+              selected={filters.materials}
+              onToggle={(val) => toggleFilter('materials', val)}
+            />
+          </FilterSection>
 
+          <FilterSection label="FIT" open={openSections.fit} onToggle={() => toggleSection('fit')}>
+            <CheckboxList
+              items={["Relaxed", "Straight", "Fit and Flare", "A-line", "Fitted", "Anti Fit"]}
+              selected={filters.fits}
+              onToggle={(val) => toggleFilter('fits', val)}
+            />
+          </FilterSection>
+
+        </div>
       </div>
 
       {/* ================= RIGHT SIDE PRODUCTS ================= */}
       <div className='flex-1'>
 
-        <div className="flex justify-between items-center mb-6">
-          <p className="text-gray-600 text-sm">{sortedProducts.length} Products</p>
-          <select
-            className="border px-3 py-1 text-sm"
-            onChange={(e) => setSortOrder(e.target.value)}
-            value={sortOrder}
+        <div className="flex justify-between items-center mb-6 gap-4">
+          {/* NEW: Filter toggle button, styled like the Adidas "Filter & Sort" button */}
+          <button
+            onClick={() => setShowFilters(prev => !prev)}
+            className="flex items-center gap-2 border px-4 py-2 text-sm font-medium hover:border-black transition"
           >
-            <option value="default">Sort</option>
-            <option value="low-high">Low to High</option>
-            <option value="high-low">High to Low</option>
-          </select>
+            {showFilters ? 'HIDE FILTERS' : 'FILTER & SORT'}
+            {filtersActive && (
+              <span className="w-2 h-2 rounded-full bg-black inline-block" />
+            )}
+          </button>
+
+          <div className="flex items-center gap-4">
+            <p className="text-gray-600 text-sm whitespace-nowrap">{sortedProducts.length} Products</p>
+            <select
+              className="border px-3 py-1 text-sm"
+              onChange={(e) => setSortOrder(e.target.value)}
+              value={sortOrder}
+            >
+              <option value="default">Sort</option>
+              <option value="low-high">Low to High</option>
+              <option value="high-low">High to Low</option>
+            </select>
+          </div>
         </div>
 
         {sortedProducts.length === 0
           ? <p className="text-gray-400 text-sm mt-10">No products match your filters.</p>
           : (
-            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10'>
               {sortedProducts.map((item) => (
-                
+
                 <Link to={`/product/${item._id}`} key={item._id} className="group cursor-pointer">
 
-                  <div className="overflow-hidden">
+                  {/* FIX: fixed aspect-ratio frame + object-cover so every
+                      card has identical dimensions, regardless of the
+                      source image's own width/height (this is what makes
+                      the Adidas grid look aligned). */}
+                  <div className="overflow-hidden aspect-[3/4] bg-gray-100">
                     <img
-                      src={item.image[0]}
+                      src={item.images[0]}
                       alt={item.name}
-                      className="w-full h-auto group-hover:scale-105 transition duration-300"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     />
                   </div>
 
-                  <p className="text-sm mt-2 text-gray-700">{item.name}</p>
+                  <p className="text-sm mt-2 text-gray-700 truncate">{item.name}</p>
                   <p className="text-sm font-medium">₹ {item.price}</p>
 
                 </Link>

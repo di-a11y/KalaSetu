@@ -1,12 +1,16 @@
 import { useState, useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import search_icon  from "../assets/frontend_assets/search_icon.png";
+import search_icon from "../assets/frontend_assets/search_icon.png";
 import profile_icon from "../assets/frontend_assets/profile_icon.png";
-import cart_icon    from "../assets/frontend_assets/cart_icon.png";
-import menu_icon    from "../assets/frontend_assets/menu_icon.png";
+import cart_icon from "../assets/frontend_assets/cart_icon.png";
+import menu_icon from "../assets/frontend_assets/menu_icon.png";
 import dropdown_icon from "../assets/frontend_assets/dropdown_icon.png";
 import { ShopContext } from "../context/ShopContext";
 import SearchBar from "./SearchBar";
+// FIX: Orders is a PAGE, navigated to via the router — it should never be
+// imported directly into Navbar. That import was also pointing at the
+// wrong folder (Orders.jsx lives in src/pages, not src/components), which
+// is what Vite's "Failed to resolve import" error was complaining about.
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -19,6 +23,15 @@ const Navbar = () => {
     setShowSearch,
     getCartCount,
   } = useContext(ShopContext);
+
+  const navigate = useNavigate();
+  const { setToken } = useContext(ShopContext);   // or however you expose it
+
+  const handleLogout = () => {
+    setToken('');                    // clear token from context
+    localStorage.removeItem('token'); // clear from storage
+    navigate('/login');              // redirect to login page
+  };
 
   return (
     <>
@@ -65,9 +78,15 @@ const Navbar = () => {
               <img src={profile_icon} alt="profile" className="w-5 cursor-pointer" />
               <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50">
                 <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-amber-100 text-gray-500 rounded">
-                  <p className="cursor-pointer hover:text-black">My Profile</p>
-                  <p className="cursor-pointer hover:text-black">Orders</p>
-                  <p className="cursor-pointer hover:text-black">Logout</p>
+                  <NavLink to="/Profile" className="cursor-pointer hover:text-black">My Profile</NavLink>
+                  {/*
+                    FIX: was onClick={Orders} — passing the Orders component
+                    itself as a click handler, which doesn't navigate or
+                    render anything. Orders is a routed page, so this just
+                    links to it like every other nav item below.
+                  */}
+                  <NavLink to="/orders" className="cursor-pointer hover:text-black">Orders</NavLink>
+                  <p onClick={handleLogout} className="cursor-pointer hover:text-black">Logout</p>
                 </div>
               </div>
             </div>

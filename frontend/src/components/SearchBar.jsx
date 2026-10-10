@@ -240,7 +240,7 @@ const SearchBar = () => {
                       {/* Thumbnail */}
                       <div className="w-16 h-20 flex-shrink-0 bg-gray-100 overflow-hidden">
                         <img
-                          src={product.image?.[0]}
+                          src={product.images?.[0]}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
